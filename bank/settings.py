@@ -16,6 +16,10 @@ ALLOWED_HOSTS = [
     ".vercel.app",
     "localhost",
     "127.0.0.1",
+    'https://localhost:4200',
+    'http://localhost:4200',
+    'localhost:4200',
+    '*'
 ]
 
 # Disable automatic trailing slash redirect to prevent CORS preflight redirect
