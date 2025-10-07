@@ -12,6 +12,10 @@ ALLOWED_HOSTS = [
     ".vercel.app",
     "localhost",
     "127.0.0.1",
+    'http://localhost:4200',
+    'localhost:4200',
+    '*'
+
 ]
 
 APPEND_SLASH = False
