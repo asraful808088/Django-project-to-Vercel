@@ -4,7 +4,7 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'nai '
+SECRET_KEY = '1234'
 
 DEBUG = True
 
@@ -12,19 +12,19 @@ ALLOWED_HOSTS = [
     ".vercel.app",
     "localhost",
     "127.0.0.1",
-    "*"
 ]
 
-# Installed apps
+APPEND_SLASH = False
+
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',  # for static files
+    'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'login_create',  # custom apps
+    'login_create',
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
@@ -32,15 +32,13 @@ INSTALLED_APPS = [
     'banking_system',
 ]
 
-# CORS settings
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True  
 CORS_ALLOW_CREDENTIALS = True
 
-# Middleware
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # must be after SecurityMiddleware
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -51,21 +49,18 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'bank.urls'
 
-# Custom user
 AUTH_USER_MODEL = 'login_create.CustomUser'
 
-# DRF JWT auth
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
-# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # optional: create a templates folder
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,7 +98,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JS, Images)
+# Static files
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
