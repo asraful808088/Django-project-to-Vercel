@@ -2,45 +2,49 @@ from pathlib import Path
 import os
 import dj_database_url
 
+# ----------------------------
+# BASE & SECRET
+# ----------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
+DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
 
-SECRET_KEY = '1234'
-
-DEBUG = True
-
+# ----------------------------
+# HOSTS & URL SLASH FIX
+# ----------------------------
 ALLOWED_HOSTS = [
     ".vercel.app",
     "localhost",
     "127.0.0.1",
-    'http://localhost:4200',
-    'localhost:4200',
-    '*'
-
 ]
 
+# Disable automatic trailing slash redirect to prevent CORS preflight redirect
 APPEND_SLASH = False
 
+# ----------------------------
+# INSTALLED APPS
+# ----------------------------
 INSTALLED_APPS = [
-    'whitenoise.runserver_nostatic',
+    'whitenoise.runserver_nostatic',  # static files
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'login_create',
+    'corsheaders',  # CORS
     'rest_framework',
-    'corsheaders',
-    'rest_framework_simplejwt',
+    'rest_framework_simplejwt',  # JWT auth
+    'login_create',
     'transection',
     'banking_system',
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True  
-CORS_ALLOW_CREDENTIALS = True
-
+# ----------------------------
+# MIDDLEWARE
+# ----------------------------
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  
+    'corsheaders.middleware.CorsMiddleware',  # MUST be first
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -51,16 +55,54 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# ----------------------------
+# ROOT URLS & WSGI
+# ----------------------------
 ROOT_URLCONF = 'bank.urls'
+WSGI_APPLICATION = 'bank.wsgi.application'
 
+# ----------------------------
+# AUTH
+# ----------------------------
 AUTH_USER_MODEL = 'login_create.CustomUser'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# ----------------------------
+# REST FRAMEWORK
+# ----------------------------
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
+# ----------------------------
+# CORS SETTINGS
+# ----------------------------
+CORS_ALLOW_ALL_ORIGINS = True  # For dev
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'authorization',
+    'content-type',
+    'accept',
+    'origin',
+    'x-csrftoken',
+]
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS',
+]
+
+# ----------------------------
+# TEMPLATES
+# ----------------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -77,14 +119,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'bank.wsgi.application'
-
-# Authentication backends
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
-
-# Database config
+# ----------------------------
+# DATABASE
+# ----------------------------
 DATABASES = {
     'default': dj_database_url.parse(
         os.environ.get(
@@ -96,16 +133,22 @@ DATABASES = {
     )
 }
 
-# Localization
+# ----------------------------
+# LOCALIZATION
+# ----------------------------
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# ----------------------------
+# STATIC FILES
+# ----------------------------
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Default auto field
+# ----------------------------
+# DEFAULT AUTO FIELD
+# ----------------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
