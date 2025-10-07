@@ -6,8 +6,8 @@ import dj_database_url
 # BASE & SECRET
 # ----------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
-DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+SECRET_KEY = '1234'
+DEBUG = True
 
 # ----------------------------
 # HOSTS & URL SLASH FIX
