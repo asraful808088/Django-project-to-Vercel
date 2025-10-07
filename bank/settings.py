@@ -4,13 +4,10 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECRET_KEY should always come from environment for security
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
+SECRET_KEY = 'nai '
 
-# DEBUG mode (convert string to bool)
-DEBUG = os.environ.get("DEBUG", "False").lower() in ["true", "1"]
+DEBUG = True
 
-# Allowed hosts (Vercel domains, localhost)
 ALLOWED_HOSTS = [
     ".vercel.app",
     "localhost",
