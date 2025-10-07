@@ -1,12 +1,19 @@
 from pathlib import Path
+import os
 import dj_database_url
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'your_secret_key_here'
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "fallback-secret-key")
 
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = [
+    ".vercel.app",
+    "localhost",
+    "127.0.0.1",
+    "*"
+]
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
@@ -21,16 +28,16 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework_simplejwt',
     'transection',
-    'banking_system'
+    'banking_system',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware', 
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -40,6 +47,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'bank.urls'
+
 AUTH_USER_MODEL = 'login_create.CustomUser'
 
 REST_FRAMEWORK = {
@@ -67,32 +75,28 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bank.wsgi.application'
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'q_bank',
-    #     'USER': 'postgres',
-    #     'PASSWORD': '1111',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '5432',
-    # }
-
-     'default': dj_database_url.parse(
-        "postgresql://q_bank_user:swBBhjt1SB7iEG0GlIt0OGw4qYzKGfeO@dpg-d3i0nsjipnbc73cr2ol0-a.oregon-postgres.render.com/q_bank",
+    'default': dj_database_url.parse(
+        os.environ.get(
+            "DATABASE_URL",
+            "postgresql://q_bank_user:swBBhjt1SB7iEG0GlIt0OGw4qYzKGfeO@dpg-d3i0nsjipnbc73cr2ol0-a.oregon-postgres.render.com/q_bank"
+        ),
         conn_max_age=600,
-        ssl_require=True  # Ensures secure connection (Render requires SSL)
+        ssl_require=True
     )
 }
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
