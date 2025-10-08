@@ -23,10 +23,15 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from .paymentServiceSerializer import APIPaymentServiceSerializer
 class PaymentTokenGetPost(GenericAPIView,ListModelMixin):
     permission_classes = [IsAuthenticated]
+
     queryset = TransferTempToken.objects.all()
     serializer_class = PaymentTokenSerializer
+    def get_queryset(self):
+        return TransferTempToken.objects.filter(author=self.request.user)
     def get(self, req, *arg, **KMoreA):
-        return self.list( req, *arg, **KMoreA)
+        user_tokens = self.get_queryset()
+        serializer = self.get_serializer(user_tokens, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class PaymentTokenDUR(GenericAPIView,RetrieveModelMixin,UpdateModelMixin,DestroyModelMixin):
